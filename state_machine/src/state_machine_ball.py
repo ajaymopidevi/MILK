@@ -73,7 +73,7 @@ class AvoidBall():
 
         t0= time.time()
         state_machine.create_trajectory_Motor_cmd('servo',servo_right)
-	while( time.time() - t0<0.5):
+	    while( time.time() - t0<0.5):
             state_machine.create_trajectory_Motor_cmd('brushless_motor', slow_motor)
 
 class Stop(State):

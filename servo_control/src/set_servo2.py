@@ -8,8 +8,6 @@ from state_machine.msg import MotorCommand
 servo = maestro.Controller()
 
 def callback(data):
-    #servo = Controller()i
-    print("check")
     if data.joint_name == "servo":
         channel = 8
     else:

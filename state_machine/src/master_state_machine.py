@@ -71,8 +71,6 @@ class Stop(State):
 
 
 class StateMachine(object):
-
-
     def __init__(self, pub_topic, sub_topic_depth, sub_topic_pid, sub_topic_pid_light, sub_topic_stop_sign):
         self.sub_depth = rospy.Subscriber(sub_topic_depth, Float32MultiArray, callback=self.sub_depth_callback)
         self.sub_pid = rospy.Subscriber(sub_topic_pid, Float32, callback=self.sub_pid_callback)
@@ -236,8 +234,8 @@ class Polulu_Command:
 
         mtr=MotorCommand()
         mtr.joint_name=jntName
-        mtr.position=pos
-        mtr.speed=speed#/self.MaxSpeed#pololu take 0 to 1.0 as speed, check the correct division
+        mtr.position=pos # desired angle 
+        mtr.speed=speed #/self.MaxSpeed#pololu take 0 to 1.0 as speed, check the correct division
         mtr.acceleration=1.0
         self.pub.publish(mtr)
         
