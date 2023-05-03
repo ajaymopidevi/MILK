@@ -34,7 +34,7 @@ class MoveAndAvoidBall:
     def move_forward(self):
         polulu.send_motor_command(pos=0.1, speed=0)
         polulu.send_servo_command(pos=0, speed=0)
-    
+
 
     def get_steering_angle_to_steer_away_from_ball(self):
         if self.left_depth > self.right_depth:
@@ -51,25 +51,31 @@ class MoveAndAvoidBall:
             polulu.send_servo_command(pos=angle, speed=0.1)
             polulu.send_motor_command(pos=angle, speed=0.1)
         end_time = time.time()
-        self.steer_time = end_time - start_time
+        steer_time = end_time - start_time
+        return steer_time
 
 
-    def steer_back_to_center(self):
+    def steer_back_to_center(self, steer_time):
         angle = -1 * self.get_steering_angle_to_steer_away_from_ball()
-        end_time = time.time() + self.end_time
+        end_time = time.time() + steer_time
         while time.time() < end_time and self.is_in_safe_distance_from_wall() or not self.recieved_stop_signal:
             polulu.send_servo_command(pos=angle, speed=0.1)
             polulu.send_motor_command(pos=angle, speed=0.1)
 
+
     def avoid_ball(self):
-        self.steer_away_from_ball()
-        self.steer_back_to_center()
+        steer_time = self.steer_away_from_ball()
+        self.steer_back_to_center(steer_time)
+
 
     def run(self):
         while not rospy.is_shutdown() or not self.recieved_stop_signal:
             while not self.ball_detected or not self.recieved_stop_signal:
                 self.move_forward()
             self.avoid_ball()
-    
-move_and_avoid_ball = MoveAndAvoidBall()
-move_and_avoid_ball.run()
+
+
+if __name__ == "__main__":
+    rospy.init_node('move_and_avoid_ball')
+    move_and_avoid_ball = MoveAndAvoidBall()
+    move_and_avoid_ball.run()
